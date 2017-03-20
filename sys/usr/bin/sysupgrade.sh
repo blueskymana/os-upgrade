@@ -124,7 +124,7 @@ then
         uci commit sysconf
 
         # upgrade system.
-        sysupgrade -c /tmp/$os_file
+        sysupgrade /tmp/$os_file
 
         # echo information.
         echo "starting to upgrate /tmp/$os_file."
