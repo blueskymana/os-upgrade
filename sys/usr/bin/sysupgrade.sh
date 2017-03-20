@@ -19,7 +19,6 @@ mac_addr=$(ifconfig $wan_interface | grep "HWaddr" | awk -F " " '{ print $5 }')
 # construct server url
 server_url=http://$server_domain
 
-
 ################################# function ############################################
 
 # json data format analysis
@@ -93,13 +92,11 @@ echo $r_md5
 echo $r_soft_version $soft_version
 if version_gt "$r_soft_version" "$soft_version"
 then
-    rm -rf "/tmp/$firmware-\*"
-
     # check information and download firmware
     os_file=$firmware-$product_id-$r_soft_version.bin
+    rm -rf "/tmp/$os_file"
+
     download_url="$server_url/$product_id/$os_file"
-    
-    echo $download_url
 
     wget -c -P /tmp $download_url
     if [ ! -f /tmp/$os_file ]
@@ -123,7 +120,8 @@ then
 
         # save device id
         uci set sysconf.@system[0].device_id=$r_device_id
-        uci -c /etc/config commit sysconf
+        uci set sysconf.@system[0].soft_version=$r_soft_version
+        uci commit sysconf
 
         # upgrade system.
         sysupgrade -c /tmp/$os_file

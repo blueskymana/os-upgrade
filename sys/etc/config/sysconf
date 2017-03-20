@@ -1,7 +1,4 @@
-
-
-
-config interface system
+config system 'system'
     option soft_version      "1.0.0"
     option product_id        "c200"
     option server_domain     "update.nexfi.cn"
