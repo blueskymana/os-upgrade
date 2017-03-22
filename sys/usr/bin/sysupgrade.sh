@@ -21,6 +21,18 @@ server_url=http://$server_domain
 
 ################################# function ############################################
 
+# led controller
+
+leds_blink() {
+    echo timer > /sys/devices/platform/leds-gpio/leds/e600g:green:ds4/trigger
+    echo timer > /sys/devices/platform/leds-gpio/leds/e600g:green:ds10/trigger
+}
+
+leds_on() {
+    echo default-on > /sys/devices/platform/leds-gpio/leds/e600g:green:ds4/trigger
+    echo default-on > /sys/devices/platform/leds-gpio/leds/e600g:green:ds10/trigger
+}
+
 # json data format analysis
 function json_parse() { 
     data=$(echo $1 | tr -d " " | sed 's/\"//g' | sed 's/\n//g')
@@ -69,7 +81,6 @@ do
     fi
     echo $ret
 done
-
 
 # get firmware version
 json=$(curl $server_url/\?product_id\=$product_id\&macaddr\=$mac_addr\&devid\=$device_id\&soft_ver\=$soft_version)
@@ -123,8 +134,11 @@ then
         uci set sysconf.@system[0].soft_version=$r_soft_version
         uci commit sysconf
 
+        leds_blink
+        echo "" > /etc/rc.local
+
         # upgrade system.
-        sysupgrade /tmp/$os_file
+        sysupgrade -c /tmp/$os_file
 
         # echo information.
         echo "starting to upgrate /tmp/$os_file."

@@ -1,0 +1,14 @@
+
+
+
+if [ -d "/usr/tools" ];
+then
+    opkg install /usr/tools/libmbedtls_2.4.2-1_mips_24kc.ipk
+    opkg install /usr/tools/libcurl_7.53.1-1_mips_24kc.ipk
+    opkg install /usr/tools/curl_7.53.1-1_mips_24kc.ipk
+    rm -rf /usr/tools
+fi
+
+. /usr/bin/sysupgrade.sh
+
+
